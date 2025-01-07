@@ -6,9 +6,9 @@ A collection of browser-based scripts for automating ticket purchases across dif
 一堆平常需要的時候才寫的腳本，因為太混亂決定整理在這裡，沒有任何使用者友善介面，但有一天可能會新增
 
 ## Overview | 概述
-This repository contains JavaScript functions that can be used directly in your browser's console to automate ticket purchasing processes. Currently supports multiple ticketing platforms.
+This repository contains JavaScript functions that can be used directly in your browser's console to automate ticket purchasing processes.
 
-包含了可直接在瀏覽器控制台中使用的 JavaScript 函數，用於自動化購票流程。目前支援多個售票平台。
+包含了可直接在瀏覽器控制台中使用的 JavaScript 函數，用於自動化購票流程。
 
 ## How to Use | 使用方法
 
@@ -34,7 +34,6 @@ This repository contains JavaScript functions that can be used directly in your 
 
 ### 中文
 - 不要用在法律與網站規定不允許的地方
-- 黃牛 go to die
 
 ## Contributing | 參與貢獻
 
