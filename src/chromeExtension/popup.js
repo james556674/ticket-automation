@@ -34,7 +34,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Set running state before sending message
             setRunningState();
 
-            chrome.tabs.sendMessage(tabs[0].id, { action: "tryAddTicket" }, (response) => {
+            const targetPrice = document.getElementById('targetPrice').value;
+            console.log(`Target price: ${targetPrice}`);
+            const formattedTargetPrice = targetPrice.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+            chrome.tabs.sendMessage(tabs[0].id, { action: "tryAddTicket", targetPrice: formattedTargetPrice }, (response) => {
                 if (chrome.runtime.lastError) {
                     console.error('Error:', chrome.runtime.lastError);
                     updateStatus('Error: Could not connect to page', 'stopped');

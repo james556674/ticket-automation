@@ -18,8 +18,8 @@ function playNotificationSound() {
 }
 
 // Step 1: Open the ticket section based on price
-function openPriceSection() {
-  console.log(`Looking for NT.${TARGET_PRICE} section...`);
+function openPriceSection(targetPrice) {
+  console.log(`Looking for NT.${targetPrice} section...`);
 
   // Find all panels
   const allPanels = document.querySelectorAll(".v-expansion-panel");
@@ -29,8 +29,8 @@ function openPriceSection() {
     const priceText = panel.textContent;
     console.log("Checking panel:", priceText);
 
-    if (priceText.includes(`NT.${TARGET_PRICE}`)) {
-      console.log(`Found NT.${TARGET_PRICE} section!`);
+    if (priceText.includes(`NT.${targetPrice}`)) {
+      console.log(`Found NT.${targetPrice} section!`);
       const headerButton = panel.querySelector(".v-expansion-panel-header");
       if (headerButton) {
         console.log("Clicking to open section...");
@@ -40,13 +40,13 @@ function openPriceSection() {
     }
   }
 
-  console.log(`Could not find NT.${TARGET_PRICE} section`);
+  console.log(`Could not find NT.${targetPrice} section`);
   return null;
 }
 
 // Step 2: Try to add ticket and proceed
-function tryAddTicket(shouldStartRefresh = true) {
-  const panel = openPriceSection();
+function tryAddTicket(shouldStartRefresh = true, targetPrice = TARGET_PRICE) {
+  const panel = openPriceSection(targetPrice);
   if (!panel) {
     console.log("Couldn't find price section");
     if (shouldStartRefresh) startRefreshing();
@@ -73,14 +73,14 @@ function tryAddTicket(shouldStartRefresh = true) {
       }, 800);
     } else {
       console.log("No tickets available to add");
-      if (shouldStartRefresh) startRefreshing();
+      if (shouldStartRefresh) startRefreshing(targetPrice);
       return false;
     }
   }, 500);
 }
 
 // Step 4: Keep refreshing until we can add a ticket
-function startRefreshing() {
+function startRefreshing(targetPrice) {
   console.log("Starting refresh loop...");
   isClicking = true;
 
@@ -93,7 +93,7 @@ function startRefreshing() {
 
       // Wait for content to load
       setTimeout(() => {
-        const result = tryAddTicket(false);
+        const result = tryAddTicket(false, targetPrice);
         if (!result) {
           console.log(`Attempt #${attemptCount}: Couldn't add ticket, will try again...`);
         }
@@ -118,7 +118,7 @@ console.log("Making first attempt to add ticket...");
 // Add a listener for messages from the popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === "tryAddTicket") {
-      tryAddTicket(true); // Call the function when the message is received
+      tryAddTicket(true, request.targetPrice);
       sendResponse({ status: "Ticket addition attempted." });
   } else if (request.action === "stopAddingTicket") {
       toggleClicking(); // Call the function to stop refreshing
