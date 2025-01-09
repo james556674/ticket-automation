@@ -1,0 +1,31 @@
+{
+    "manifest_version": 3,
+    "name": "Tix Craft Automation",
+    "version": "1.0",
+    "description": "Automate ticket purchasing.",
+    "permissions": [
+      "activeTab"
+    ],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_icon": {
+        "16": "./clapperboard_1149562.png",
+        "48": "./clapperboard_1149562.png",
+        "128": "./clapperboard_1149562.png"
+      }
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://tixcraft.com/*"],
+        "js": ["util.js"]
+      }
+    ],
+    "web_accessible_resources": [
+      {
+        "resources": ["util.js"],
+        "matches": ["https://tixcraft.com/*"]
+      }
+    ]
+}
