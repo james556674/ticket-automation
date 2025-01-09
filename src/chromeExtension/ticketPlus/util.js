@@ -21,16 +21,26 @@ function playNotificationSound() {
 function openPriceSection(targetPrice) {
   console.log(`Looking for NT.${targetPrice} section...`);
 
-  // Find all panels
+  // First try the card-style ticket section
+  const cardSections = document.querySelectorAll(".v-card.theme--light");
+  for (const section of cardSections) {
+    const priceElements = section.querySelectorAll(".text-center.col-sm-3.col-md-3.col-3");
+    for (const priceEl of priceElements) {
+      // Clean up the text content by removing extra spaces and newlines
+      const priceText = priceEl.textContent.trim().replace(/\s+/g, "");
+      if (priceText === `NT.${targetPrice}`) {
+        console.log(`Found NT.${targetPrice} in card section!`);
+        return section;
+      }
+    }
+  }
+
+  // If not found, try the expansion panels
   const allPanels = document.querySelectorAll(".v-expansion-panel");
-
   for (const panel of allPanels) {
-    // Get the price text
     const priceText = panel.textContent;
-    console.log("Checking panel:", priceText);
-
     if (priceText.includes(`NT.${targetPrice}`)) {
-      console.log(`Found NT.${targetPrice} section!`);
+      console.log(`Found NT.${targetPrice} in expansion panel!`);
       const headerButton = panel.querySelector(".v-expansion-panel-header");
       if (headerButton) {
         console.log("Clicking to open section...");
@@ -46,19 +56,25 @@ function openPriceSection(targetPrice) {
 
 // Step 2: Try to add ticket and proceed
 function tryAddTicket(shouldStartRefresh = true, targetPrice = TARGET_PRICE) {
-  const panel = openPriceSection(targetPrice);
-  if (!panel) {
+  const section = openPriceSection(targetPrice);
+  if (!section) {
     console.log("Couldn't find price section");
-    if (shouldStartRefresh) startRefreshing();
+    if (shouldStartRefresh) startRefreshing(targetPrice);
     return false;
   }
 
-  // Wait for panel to open
+  // Wait for panel to open or card to be ready
   setTimeout(() => {
-    const plusButton = panel.querySelector("button:has(i.mdi-plus)");
+    // Try card-style plus button first
+    let plusButton = section.querySelector("button:has(i.mdi-plus.primary-1--text):not([disabled])");
+    // If not found, try expansion panel plus button
+    if (!plusButton) {
+      plusButton = section.querySelector("button:has(i.mdi-plus):not([disabled])");
+    }
+
     if (plusButton) {
       console.log("Found +1 button, clicking...");
-      playNotificationSound(); // Play sound when ticket is found
+      playNotificationSound();
       plusButton.click();
 
       // Step 3: Click next button after adding ticket
@@ -68,11 +84,11 @@ function tryAddTicket(shouldStartRefresh = true, targetPrice = TARGET_PRICE) {
           console.log("Clicking next button!");
           nextButton.click();
           if (isClicking) toggleClicking(); // Stop refresh loop if running
-          return true;
         }
       }, 800);
+      return true;
     } else {
-      console.log("No tickets available to add");
+      console.log("No enabled tickets available to add");
       if (shouldStartRefresh) startRefreshing(targetPrice);
       return false;
     }
