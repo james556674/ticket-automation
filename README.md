@@ -26,11 +26,11 @@ This repository contains JavaScript functions that can be used directly in your 
 4. 貼上後按enter
 5. 每個腳本都只能用在特定的場景
 
+
 ## Important Notes | 重要提醒
 
 ### English
-- Do not use in ways that violate laws or website terms of service
-- Scalpers go to die
+- Do not use in ways that violate laws or website terms of service- Scalpers go to die
 
 ### 中文
 - 不要用在法律與網站規定不允許的地方
